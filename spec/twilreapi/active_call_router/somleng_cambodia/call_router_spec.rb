@@ -4,30 +4,33 @@ describe Twilreapi::ActiveCallRouter::SomlengCambodia::CallRouter do
   include EnvHelpers
 
   class DummyPhoneCall
-    attr_accessor :from, :to
+    attr_accessor :from, :to, :account_sid
 
     def initialize(attributes = {})
       self.from = attributes[:from]
       self.to = attributes[:to]
+      self.account_sid = attributes[:account_sid]
     end
   end
 
   let(:source) { "8559999" }
   let(:destination) { "+85518345678" }
+  let(:account_sid) { "account-sid" }
+
+  let(:asserted_caller_id) { source }
   let(:asserted_destination) { destination.sub(/^\+/, "") }
   let(:asserted_disable_originate) { nil }
   let(:asserted_address) { asserted_destination }
 
-  let(:mhealth_source_number) { "8551777" }
-  let(:mhealth_caller_id) { "1234" }
-  let(:ews_source_number) { "8551778" }
-  let(:ews_caller_id) { "4321" }
-
   let(:smart_number)    { "+85510344566"  }
   let(:cellcard_number) { "+85512345677"  }
   let(:metfone_number)  { "+855882345678" }
+  let(:qb_number)  { "+85513345678" }
 
-  let(:phone_call_attributes) { { :from => source, :to => destination } }
+  let(:chibi_accounts_sids) { [] }
+  let(:chibi_accounts_whitelist) { chibi_accounts_sids.join(":") }
+
+  let(:phone_call_attributes) { { :from => source, :to => destination, :account_sid => account_sid } }
   let(:phone_call_instance) { DummyPhoneCall.new(phone_call_attributes) }
   let(:options) { {:phone_call => phone_call_instance} }
 
@@ -39,10 +42,7 @@ describe Twilreapi::ActiveCallRouter::SomlengCambodia::CallRouter do
 
   def setup_scenario
     stub_env(
-      :"twilreapi_active_call_router_pin_cambodia_mhealth_source_number" => mhealth_source_number,
-      :"twilreapi_active_call_router_pin_cambodia_ews_source_number" => ews_source_number,
-      :"twilreapi_active_call_router_pin_cambodia_mhealth_caller_id" => mhealth_caller_id,
-      :"twilreapi_active_call_router_pin_cambodia_ews_caller_id" => ews_caller_id
+      :"twilreapi_active_call_router_somleng_cambodia_chibi_accounts_whitelist" => chibi_accounts_whitelist
     )
   end
 
@@ -57,82 +57,34 @@ describe Twilreapi::ActiveCallRouter::SomlengCambodia::CallRouter do
       expect(routing_instructions["address"]).to eq(asserted_address)
     end
 
-    context "source: mhealth" do
-      let(:source) { mhealth_source_number }
-      let(:asserted_caller_id) { mhealth_caller_id }
+    context "Authorized Chibi Accounts", :focus do
+      let(:chibi_accounts_sids) { [account_sid] }
 
       context "Smart" do
-        let(:asserted_gateway) { "pin_kh_01" }
+        let(:asserted_gateway) { "smart_chibi" }
         let(:destination) { smart_number }
         it { assert_routing_instructions! }
       end
 
       context "Cellcard" do
-        let(:asserted_gateway) { "pin_kh_04" }
+        let(:asserted_gateway) { nil }
+        let(:asserted_disable_originate) { "1" }
         let(:destination) { cellcard_number }
         it { assert_routing_instructions! }
       end
 
       context "Metfone" do
-        let(:asserted_gateway) { "pin_kh_04" }
+        let(:asserted_gateway) { nil }
+        let(:asserted_disable_originate) { "1" }
         let(:destination) { metfone_number }
         it { assert_routing_instructions! }
       end
-    end
 
-    context "source: ews" do
-      let(:source) { ews_source_number }
-      let(:asserted_caller_id) { ews_caller_id }
-
-      context "Smart" do
-        let(:destination) { smart_number }
-        let(:asserted_gateway) { "pin_kh_07" }
-        let(:asserted_address) { "010344566" }
+      context "qb" do
+        let(:asserted_gateway) { "qb_chibi" }
+        let(:destination) { qb_number }
         it { assert_routing_instructions! }
       end
-
-      context "Cellcard" do
-        let(:destination) { cellcard_number }
-        let(:asserted_gateway) { "pin_kh_05" }
-        let(:asserted_address) { "012345677" }
-        it { assert_routing_instructions! }
-      end
-
-      context "Metfone" do
-        let(:destination) { metfone_number }
-        let(:asserted_gateway) { "pin_kh_06" }
-        let(:asserted_address) { "0882345678" }
-        it { assert_routing_instructions! }
-      end
-    end
-
-    context "source: unknown" do
-      let(:asserted_caller_id) { source }
-
-      context "Smart" do
-        let(:destination) { smart_number }
-        let(:asserted_gateway) { "pin_kh_01" }
-        it { assert_routing_instructions! }
-      end
-
-      context "Cellcard" do
-        let(:destination) { cellcard_number }
-        let(:asserted_gateway) { "pin_kh_04" }
-        it { assert_routing_instructions! }
-      end
-
-      context "Metfone" do
-        let(:destination) { metfone_number }
-        let(:asserted_gateway) { "pin_kh_04" }
-        it { assert_routing_instructions! }
-      end
-    end
-
-    context "destination unknown" do
-      let(:asserted_caller_id) { source }
-      let(:asserted_gateway) { nil }
-      let(:asserted_disable_originate) { "1" }
-      it { assert_routing_instructions! }
     end
   end
 end

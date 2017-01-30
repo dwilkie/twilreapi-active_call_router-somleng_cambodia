@@ -3,30 +3,12 @@ kh:
     smart:
       metadata:
         gateways:
-          mhealth_default:
-            name: "pin_kh_01"
-          ews_default:
-            name: "pin_kh_07"
-            prefix: false
-          others:
-          -  name: "pin_kh_01"
-    mobitel:
+          chibi:
+            name: "smart_chibi"
+          open_institute:
+            name: "somleng_oi_sip"
+    qb:
       metadata:
         gateways:
-          mhealth_default:
-            name: "pin_kh_04"
-          ews_default:
-            name: "pin_kh_05"
-            prefix: false
-          others:
-          - name: "pin_kh_04"
-    metfone:
-      metadata:
-        gateways:
-          mhealth_default:
-            name: "pin_kh_04"
-          ews_default:
-            name: "pin_kh_06"
-            prefix: false
-          others:
-          -  name: "pin_kh_04"
+          chibi:
+            name: "qb_chibi"
