@@ -4,11 +4,27 @@ kh:
       metadata:
         gateways:
           chibi:
-            name: "smart_chibi"
+            host: "27.109.112.80"
           open_institute:
-            name: "somleng_oi_sip"
+            host: "52.221.64.79"
+          ezecom_open_institute:
+            name: "smart_ezecom_open_institute"
+    mobitel:
+      metadata:
+        gateways:
+          open_institute:
+            host: "52.221.64.79"
+          ezecom_open_institute:
+            name: "mobitel_ezecom_open_institute"
+    metfone:
+      metadata:
+        gateways:
+          open_institute:
+            host: "52.221.64.79"
+          ezecom_open_institute:
+            name: "metfone_ezecom_open_institute"
     qb:
       metadata:
         gateways:
           chibi:
-            name: "qb_chibi"
+            host: "117.55.252.146"

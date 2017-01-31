@@ -22,12 +22,23 @@ class Twilreapi::ActiveCallRouter::SomlengCambodia::CallRouter < Twilreapi::Acti
     phone_call.to
   end
 
+  def account_sid
+    phone_call.account_sid
+  end
+
   def generate_routing_instructions
     set_routing_variables
-    gateway_configuration = gateway || fallback_gateway || {}
+
+    gateway_configuration = gateway || {}
     gateway_name = gateway_configuration["name"]
+    gateway_host = gateway_configuration["host"]
     address = normalized_destination
     address = Phony.format(address, :format => :national, :spaces => "") if gateway_configuration["prefix"] == false
+
+    if !gateway_name && gateway_host
+      address = "#{address}@#{gateway_host}"
+      gateway_type = "external"
+    end
 
     routing_instructions = {
       "source" => caller_id || source,
@@ -35,25 +46,36 @@ class Twilreapi::ActiveCallRouter::SomlengCambodia::CallRouter < Twilreapi::Acti
       "address" => address
     }
 
-    routing_instructions.merge!("gateway" => gateway_name) if gateway_name
-    routing_instructions.merge!("disable_originate" => "1") if !gateway_name
+    routing_instructions.merge!("gateway" => gateway_name, "gateway_type" => "gateway") if gateway_name
+    routing_instructions.merge!("gateway_type" => gateway_type) if gateway_type
+    routing_instructions.merge!("disable_originate" => "1") if !gateway_name && !gateway_host
     routing_instructions
   end
 
   def set_routing_variables
-    self.gateway = gateways["chibi"] if route_to_chibi?
+    if chibi_gateway = find_chibi_gateway
+      self.gateway = chibi_gateway
+    elsif open_institute_gateway = find_open_institute_gateway
+      self.gateway = open_institute_gateway
+    elsif ezecom_gateway = find_ezecom_gateway
+      self.gateway = ezecom_gateway
+    end
   end
 
-  def route_to_chibi?
-    gateways.include?("chibi") && chibi_accounts_whitelist.include?(phone_call.account_sid)
+  def find_chibi_gateway
+    chibi_accounts_whitelist.include?(account_sid) && gateways["chibi"]
+  end
+
+  def find_open_institute_gateway
+    open_institute_accounts_whitelist.include?(account_sid) && gateways["open_institute"]
+  end
+
+  def find_ezecom_gateway
+    ezecom_gateway_account && gateways[ezecom_gateway(ezecom_gateway_account)]
   end
 
   def gateways
     operator.gateways || {}
-  end
-
-  def fallback_gateway
-    gateways["fallback"]
   end
 
   def operator
@@ -70,6 +92,18 @@ class Twilreapi::ActiveCallRouter::SomlengCambodia::CallRouter < Twilreapi::Acti
 
   def chibi_accounts_whitelist
     self.class.configuration("chibi_accounts_whitelist").to_s.split(":")
+  end
+
+  def open_institute_accounts_whitelist
+    self.class.configuration("open_institute_accounts_whitelist").to_s.split(":")
+  end
+
+  def ezecom_gateway_account
+    self.class.configuration("ezecom_gateway_account")
+  end
+
+  def ezecom_gateway(ezecom_gateway_account)
+    "ezecom_#{ezecom_gateway_account}"
   end
 
   def self.configuration(key)
