@@ -74,7 +74,7 @@ describe Twilreapi::ActiveCallRouter::SomlengCambodia::CallRouter do
 
       context "Smart" do
         let(:destination) { smart_number }
-        let(:asserted_host) { "27.109.112.80" }
+        let(:asserted_host) { "52.74.158.59" }
         it { assert_routing_instructions! }
       end
 
@@ -92,7 +92,7 @@ describe Twilreapi::ActiveCallRouter::SomlengCambodia::CallRouter do
 
       context "qb" do
         let(:destination) { qb_number }
-        let(:asserted_host) { "117.55.252.146" }
+        let(:asserted_host) { "52.74.158.59" }
         it { assert_routing_instructions! }
       end
     end

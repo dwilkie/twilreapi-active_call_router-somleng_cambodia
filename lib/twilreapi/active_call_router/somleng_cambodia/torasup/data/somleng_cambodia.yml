@@ -4,7 +4,7 @@ kh:
       metadata:
         gateways:
           chibi:
-            host: "27.109.112.80"
+            host: "52.74.158.59"
           open_institute:
             host: "52.221.64.79"
           ezecom_open_institute:
@@ -27,4 +27,4 @@ kh:
       metadata:
         gateways:
           chibi:
-            host: "117.55.252.146"
+            host: "52.74.158.59"
