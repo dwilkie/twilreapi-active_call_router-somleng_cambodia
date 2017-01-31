@@ -35,20 +35,23 @@ class Twilreapi::ActiveCallRouter::SomlengCambodia::CallRouter < Twilreapi::Acti
     address = normalized_destination
     address = Phony.format(address, :format => :national, :spaces => "") if gateway_configuration["prefix"] == false
 
-    if !gateway_name && gateway_host
-      address = "#{address}@#{gateway_host}"
-      gateway_type = "external"
+    if gateway_name
+      dial_string_path = "gateway/#{gateway_name}/#{address}"
+    elsif gateway_host
+      dial_string_path = "external/#{address}@#{gateway_host}"
     end
 
     routing_instructions = {
       "source" => caller_id || source,
-      "destination" => normalized_destination,
-      "address" => address
+      "destination" => normalized_destination
     }
 
-    routing_instructions.merge!("gateway" => gateway_name, "gateway_type" => "gateway") if gateway_name
-    routing_instructions.merge!("gateway_type" => gateway_type) if gateway_type
-    routing_instructions.merge!("disable_originate" => "1") if !gateway_name && !gateway_host
+    if dial_string_path
+      routing_instructions.merge!("dial_string_path" => dial_string_path)
+    else
+      routing_instructions.merge!("disable_originate" => "1")
+    end
+
     routing_instructions
   end
 

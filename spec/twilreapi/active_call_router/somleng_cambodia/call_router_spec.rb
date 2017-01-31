@@ -21,7 +21,6 @@ describe Twilreapi::ActiveCallRouter::SomlengCambodia::CallRouter do
   let(:asserted_destination) { destination.sub(/^\+/, "") }
   let(:asserted_disable_originate) { nil }
   let(:asserted_address) { asserted_destination }
-  let(:asserted_gateway_type) { nil }
   let(:asserted_gateway) { nil }
 
   let(:smart_number)    { "+85510344566"  }
@@ -60,21 +59,18 @@ describe Twilreapi::ActiveCallRouter::SomlengCambodia::CallRouter do
 
     def assert_routing_instructions!
       expect(routing_instructions["disable_originate"]).to eq(asserted_disable_originate)
+      expect(routing_instructions["source"]).to eq(asserted_caller_id)
+      expect(routing_instructions["destination"]).to eq(asserted_destination)
 
       if !asserted_disable_originate
-        expect(routing_instructions["source"]).to eq(asserted_caller_id)
-        expect(routing_instructions["destination"]).to eq(asserted_destination)
-        expect(routing_instructions["gateway"]).to eq(asserted_gateway)
-        expect(routing_instructions["gateway_type"]).to eq(asserted_gateway_type)
-        expect(routing_instructions["address"]).to eq(asserted_address)
+        expect(routing_instructions["dial_string_path"]).to eq(asserted_dial_string_path)
       end
     end
 
     context "Authorized Chibi Accounts" do
       let(:chibi_accounts_sids) { [account_sid] }
       let(:asserted_address) { "#{asserted_destination}@#{asserted_host}" }
-      let(:asserted_gateway_type) { "external" }
-      let(:asserted_address) { "#{asserted_destination}@#{asserted_host}" }
+      let(:asserted_dial_string_path) { "external/#{asserted_address}" }
 
       context "Smart" do
         let(:destination) { smart_number }
@@ -105,7 +101,7 @@ describe Twilreapi::ActiveCallRouter::SomlengCambodia::CallRouter do
       let(:open_institute_accounts_sids) { [account_sid] }
       let(:asserted_host) { "52.221.64.79" }
       let(:asserted_address) { "#{asserted_destination}@#{asserted_host}" }
-      let(:asserted_gateway_type) { "external" }
+      let(:asserted_dial_string_path) { "external/#{asserted_address}" }
 
       context "Smart" do
         let(:destination) { smart_number }
@@ -131,7 +127,7 @@ describe Twilreapi::ActiveCallRouter::SomlengCambodia::CallRouter do
 
     context "with an Ezecom gateway account set to 'open_institute'" do
       let(:ezecom_gateway_account) { "open_institute" }
-      let(:asserted_gateway_type) { "gateway" }
+      let(:asserted_dial_string_path) { "gateway/#{asserted_gateway}/#{asserted_address}" }
 
       context "Smart" do
         let(:destination) { smart_number }
