@@ -190,18 +190,21 @@ describe Twilreapi::ActiveCallRouter::SomlengCambodia::CallRouter do
       context "Smart" do
         let(:destination) { smart_number }
         let(:asserted_gateway) { "somleng_08" }
+        let(:asserted_address) { "010344566" }
         it { assert_routing_instructions! }
       end
 
       context "Cellcard" do
         let(:destination) { cellcard_number }
         let(:asserted_gateway) { "somleng_06" }
+        let(:asserted_address) { "012345677" }
         it { assert_routing_instructions! }
       end
 
       context "Metfone" do
         let(:destination) { metfone_number }
         let(:asserted_gateway) { "somleng_07" }
+        let(:asserted_address) { "0882345678" }
         it { assert_routing_instructions! }
       end
 

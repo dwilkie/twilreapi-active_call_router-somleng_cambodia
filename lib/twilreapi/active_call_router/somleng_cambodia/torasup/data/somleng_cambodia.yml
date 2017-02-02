@@ -15,6 +15,7 @@ kh:
           - name: "somleng_05"
           ezecom_ncdm:
             name: "somleng_08"
+            prefix: false
     mobitel:
       metadata:
         gateways:
@@ -25,6 +26,7 @@ kh:
             - name: "somleng_05"
           ezecom_ncdm:
             name: "somleng_06"
+            prefix: false
     metfone:
       metadata:
         gateways:
@@ -34,6 +36,7 @@ kh:
             - name: "somleng_05"
           ezecom_ncdm:
             name: "somleng_07"
+            prefix: false
     qb:
       metadata:
         gateways:
