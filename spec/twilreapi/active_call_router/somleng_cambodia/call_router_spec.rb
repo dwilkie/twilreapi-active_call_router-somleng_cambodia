@@ -131,19 +131,77 @@ describe Twilreapi::ActiveCallRouter::SomlengCambodia::CallRouter do
 
       context "Smart" do
         let(:destination) { smart_number }
-        let(:asserted_gateway) { "smart_ezecom_open_institute" }
+        let(:asserted_gateway) { "somleng_01" }
         it { assert_routing_instructions! }
       end
 
       context "Cellcard" do
         let(:destination) { cellcard_number }
-        let(:asserted_gateway) { "mobitel_ezecom_open_institute" }
+        let(:asserted_disable_originate) { "1" }
         it { assert_routing_instructions! }
       end
 
       context "Metfone" do
         let(:destination) { metfone_number }
-        let(:asserted_gateway) { "metfone_ezecom_open_institute" }
+        let(:asserted_disable_originate) { "1" }
+        it { assert_routing_instructions! }
+      end
+
+      context "qb" do
+        let(:destination) { qb_number }
+        let(:asserted_disable_originate) { "1" }
+        it { assert_routing_instructions! }
+      end
+    end
+
+    context "with an Ezecom gateway account set to 'people_in_need'" do
+      let(:ezecom_gateway_account) { "people_in_need" }
+      let(:asserted_dial_string_path) { "gateway/#{asserted_gateway}/#{asserted_address}" }
+
+      context "Smart" do
+        let(:destination) { smart_number }
+        let(:asserted_gateway) { "somleng_02" }
+        it { assert_routing_instructions! }
+      end
+
+      context "Cellcard" do
+        let(:destination) { cellcard_number }
+        let(:asserted_gateway) { "somleng_04" }
+        it { assert_routing_instructions! }
+      end
+
+      context "Metfone" do
+        let(:destination) { metfone_number }
+        let(:asserted_gateway) { "somleng_05" }
+        it { assert_routing_instructions! }
+      end
+
+      context "qb" do
+        let(:destination) { qb_number }
+        let(:asserted_disable_originate) { "1" }
+        it { assert_routing_instructions! }
+      end
+    end
+
+    context "with an Ezecom gateway account set to 'ncdm'" do
+      let(:ezecom_gateway_account) { "ncdm" }
+      let(:asserted_dial_string_path) { "gateway/#{asserted_gateway}/#{asserted_address}" }
+
+      context "Smart" do
+        let(:destination) { smart_number }
+        let(:asserted_gateway) { "somleng_08" }
+        it { assert_routing_instructions! }
+      end
+
+      context "Cellcard" do
+        let(:destination) { cellcard_number }
+        let(:asserted_gateway) { "somleng_06" }
+        it { assert_routing_instructions! }
+      end
+
+      context "Metfone" do
+        let(:destination) { metfone_number }
+        let(:asserted_gateway) { "somleng_07" }
         it { assert_routing_instructions! }
       end
 

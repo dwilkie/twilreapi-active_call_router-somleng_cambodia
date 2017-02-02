@@ -8,21 +8,32 @@ kh:
           open_institute:
             host: "52.221.64.79"
           ezecom_open_institute:
-            name: "smart_ezecom_open_institute"
+            name: "somleng_01"
+          ezecom_people_in_need:
+          - name: "somleng_02"
+          - name: "somleng_03"
+          - name: "somleng_05"
+          ezecom_ncdm:
+            name: "somleng_08"
     mobitel:
       metadata:
         gateways:
           open_institute:
             host: "52.221.64.79"
-          ezecom_open_institute:
-            name: "mobitel_ezecom_open_institute"
+          ezecom_people_in_need:
+            - name: "somleng_04"
+            - name: "somleng_05"
+          ezecom_ncdm:
+            name: "somleng_06"
     metfone:
       metadata:
         gateways:
           open_institute:
             host: "52.221.64.79"
-          ezecom_open_institute:
-            name: "metfone_ezecom_open_institute"
+          ezecom_people_in_need:
+            - name: "somleng_05"
+          ezecom_ncdm:
+            name: "somleng_07"
     qb:
       metadata:
         gateways:

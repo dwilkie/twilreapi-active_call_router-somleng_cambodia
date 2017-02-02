@@ -74,7 +74,7 @@ class Twilreapi::ActiveCallRouter::SomlengCambodia::CallRouter < Twilreapi::Acti
   end
 
   def find_ezecom_gateway
-    ezecom_gateway_account && gateways[ezecom_gateway(ezecom_gateway_account)]
+    ezecom_gateway_account && [gateways[ezecom_gateway(ezecom_gateway_account)]].flatten.compact.first
   end
 
   def gateways
